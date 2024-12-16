@@ -9,6 +9,8 @@ def set_of (p : α → Prop) : set α := p
 def mem (a : α) (s : set α) : Prop := s a
 infix:50 " ∈ " => mem
 
+def empty : set α := fun _ => false
+
 -- Extensionality theorem
 theorem ext {A B : set α} (h : ∀ (x : α), x ∈ A ↔ x ∈ B) : A = B := by
 apply funext
@@ -25,6 +27,10 @@ theorem set_refl (A : set α) : A ⊆ A := by
 unfold subset
 intro e
 exact fun h => h
+
+
+
+
 
 /-
 instance : @Order.reflexive (set α) subset where

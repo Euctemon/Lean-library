@@ -1,1 +1,2 @@
-# Omnia-lib
+# Omnia library
+This is a personal mathematical library for the Lean prover independent of Mathlib. The goal is to build a rich enough ecosystem to prove something nontrivial, like Tannery's theorem. I also want the definitions to be a little bit simpler than those in Mathlib. I specifically don't want to use classes like `Membership` or `SetLike`. For the definitions, I take inspiration not only from Mathlib but also from Isabelle's algebra library.

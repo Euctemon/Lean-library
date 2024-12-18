@@ -24,3 +24,39 @@ def subset (A B : set α) : Prop := ∀ (a : α), a ∈ A → a ∈ B
 def union (A B : set α) : set α := set_of (fun e => e ∈ A ∨ e ∈ B)
 
 def inter (A B : set α) : set α := set_of (fun e => e ∈ A ∧ e ∈ B)
+
+def power_set (A : set α) : set (set α) := set_of (fun S => subset S A)
+
+
+
+theorem subset_of_empty {A : set α} : subset A empty → A = empty := by
+intro h
+apply ext
+intro e
+have left : e ∈ A → e ∈ empty := fun he => h e he
+have right : e ∈ empty → e ∈ A := by
+  intro he
+  simp only [mem, empty] at he
+  rw [Bool.false_eq_true] at he
+  exact False.elim he
+exact Iff.intro left right
+
+/-
+theorem subset_of_empty' {A : set α} :  ¬ A = empty → ¬ subset A empty := by
+intro h hn
+exact h (subset_of_empty hn)
+
+def singleton (a : α) : set α := set_of (fun e => e = a)
+
+
+theorem singleton_non (a : α) : a ∈ A → ¬ (subset (singleton a) A) = empty := sorry
+
+
+theorem foo (A : set α) : ¬ A = empty → ¬ power_set A = empty := by
+intro h hp
+simp only [power_set, set_of] at hp
+apply subset_of_empty' h
+simp [subset]
+intro a ha
+simp [mem, empty]
+-/

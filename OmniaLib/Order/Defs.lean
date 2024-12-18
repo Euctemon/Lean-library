@@ -50,5 +50,5 @@ class partial_order (α : Type u) (r : α → α → Prop)
 class linear_order (α : Type u) (r : α → α → Prop)
   extends partial_order α r, total α r : Prop
 
-class lattice  (α : Type u) (r : α → α → Prop)
+class lattice (α : Type u) (r : α → α → Prop)
   extends partial_order α r, has_meets α r, has_joins α r

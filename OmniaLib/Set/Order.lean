@@ -1,6 +1,5 @@
 import OmniaLib.Set.Defs
 import OmniaLib.Order.Defs
-
 namespace Set
 
 theorem subset.refl (A : set α) : subset A A := fun _ h => h
@@ -10,7 +9,7 @@ refl := subset.refl
 
 theorem subset.antisymm (A B : set α) : subset A B → subset B A → A = B := by
 intro ha hb
-apply ext
+apply setext
 intro e
 unfold subset at ha hb
 exact Iff.intro (ha e) (hb e)
@@ -53,3 +52,11 @@ join_left := subset.left_joins
 join_right := subset.right_joins
 
 instance : Order.lattice (set α) subset := Order.lattice.mk
+
+theorem empty_is_subset (A : set α) :  subset empty A := by
+intro e he
+simp only [mem, empty, Bool.false_eq_true] at he
+
+instance : Order.has_bot (set α) subset where
+bot := empty
+is_bot := empty_is_subset

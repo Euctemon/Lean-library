@@ -9,7 +9,6 @@ apply : α → β
 respects : ∀ (a b : α), r a b → s (apply a) (apply b)
 
 
-
 variable {r : α → α → Prop}
 variable {s : β → β → Prop}
 

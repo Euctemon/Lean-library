@@ -1,4 +1,4 @@
-import OmniaLib.Set.Defs
+/- import OmniaLib.Set.Defs
 import OmniaLib.Order.Defs
 namespace Set
 
@@ -60,3 +60,4 @@ simp only [mem, empty, Bool.false_eq_true] at he
 instance : Order.has_bot (set α) subset where
 bot := empty
 is_bot := empty_is_subset
+ -/

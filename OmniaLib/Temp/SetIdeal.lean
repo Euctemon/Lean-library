@@ -1,4 +1,4 @@
-import OmniaLib.Set.Order
+/- import OmniaLib.Set.Order
 import OmniaLib.Order.Ideal
 import OmniaLib.Order.PartialOrder
 
@@ -51,3 +51,4 @@ meet_right := subset.right_meets
 directed := set.directed
 lower := set.lower_set
 nonempty := foo A h
+ -/

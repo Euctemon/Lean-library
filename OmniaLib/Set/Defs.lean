@@ -29,3 +29,5 @@ def inter (A B : set α) : set α := set_of (fun e => e ∈ A ∧ e ∈ B)
 def singleton (a : α) : set α := set_of (fun e => e = a)
 
 def power_set (A : set α) : set (set α) := set_of (fun S => subset S A)
+
+def insert (a : α) (A : set α) : set α := set_of (fun e => e = a ∨ e ∈ A)

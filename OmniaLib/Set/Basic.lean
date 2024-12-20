@@ -1,131 +1,54 @@
 import OmniaLib.Set.Defs
-namespace Set
+import OmniaLib.Order.Relation.Defs
 
+/-
+Subset relation induced a partial order on any set of sets 𝔸. The set 𝔸 might not have a bottom element,
+top element, infima or suprema. If we suppose that 𝔸 is the power set of some set A, then we can prove
+that subset relation together with intersection and union induces a lattice structure on 𝔸.
+-/
+
+open Set Order
 variable {α : Type u}
 
--- subset relation
-theorem subset.refl {A : set α} : subset A A := fun _ h => h
+-- partial order
+instance subset.is_refl : reflexive (set α) subset 𝔸 where
+refl := fun _ _ _ h => h
 
-theorem subset.antisymm {A B : set α} : subset A B → subset B A → A = B := by
-unfold subset mem
-intro hab hba
-apply setext
-intro e
-exact Iff.intro (hab e) (hba e)
+instance subset.is_antisymm : antisymmetric (set α) subset 𝔸 where
+antisymm := fun _ _ _ _ sa sb => setext (fun e => Iff.intro (sa e) (sb e))
 
-theorem subset.trans (A B C : set α) : subset A B → subset B C → subset A C := by
-unfold subset mem
-intro hab hbc
-intro e he
-exact hbc e (hab e he)
+instance subset.is_trans : transitive (set α) subset 𝔸 where
+trans := fun _ _ _ _ _ _ sa sb e he => sb e (sa e he)
 
--- intersection operation
-theorem inter.symm {A B : set α} : inter A B = inter B A := by
-apply setext
-intro e
-apply Iff.intro
-case h.mp =>
-  unfold inter set_of mem
-  exact fun h => And.symm h
-case h.mpr =>
-  unfold inter set_of mem
-  exact fun h => And.symm h
+instance subset.preorder : preorder (set α) subset 𝔸 := preorder.mk
 
-theorem inter.left_subset (A B : set α) : subset (inter A B) A := by
-unfold inter set_of subset mem
-exact fun e he => he.left
+instance subset.partial_order : partial_order (set α) subset 𝔸 := partial_order.mk
 
-theorem inter.right_subset (A B : set α) : subset (inter A B) B := by
-unfold inter set_of subset mem
-exact fun e he => he.right
+-- lattice
+instance power_set.has_bot : has_bot (set α) subset (power_set A) where
+bot := empty
+bot_mem := fun _ h => False.elim (Bool.false_eq_true ▸ h)
+bot_def := fun _ _ _ h => False.elim (Bool.false_eq_true ▸ h)
 
-theorem inter.is_inf (A B C : set α) : subset C A → subset C B → subset C (inter A B) := by
-unfold inter subset set_of mem
-intro hca hcb e he
-apply And.intro
-case left =>
-  exact hca e he
-case right =>
-  exact hcb e he
+instance power_set.has_top : has_top (set α) subset (power_set A) where
+top := A
+top_mem := fun _ ha => ha
+top_def := fun _ ha => ha
 
-theorem union.symm {A B : set α} : union A B = union B A := by
-apply setext
-intro e
-apply Iff.intro
-case h.mp =>
-  unfold union set_of mem
-  exact fun h => Or.symm h
-case h.mpr =>
-  unfold union set_of mem
-  exact fun h => Or.symm h
+instance power_set.has_inf : has_inf (set α) subset (power_set A) where
+inf := inter
+inf_mem := fun _ _ ha _ e he => ha e he.left
+inf_left := fun _ _ _ _ _ he => he.left
+inf_right := fun _ _ _ _  _ he => he.right
+inf_higher := fun _ _ _ _ _ _  hca hcb e he => And.intro (hca e he) (hcb e he)
 
-theorem union.left_subset (A B : set α) : subset A (union A B) := by
-unfold union set_of subset mem
-exact fun e he => Or.intro_left (B e) he
+instance power_set.has_sup : has_sup (set α) subset (power_set A) where
+sup := union
+sup_mem := fun _ _ ha hb => fun m hm => Or.elim hm (fun a => ha m a) (fun b => hb m b)
+sup_left := fun _ b _ _ => fun e he => Or.intro_left (b e) he
+sup_right := fun a _ _ _ => fun e he => Or.intro_right (a e) he
+sup_lower := fun _ _ _ _ _ _ hca hcb e he => Or.elim he (fun ha => hca e ha) (fun hb => hcb e hb)
 
-theorem union.right_subset (A B : set α) : subset B (union A B) := by
-unfold union set_of subset mem
-exact fun e he => Or.intro_right (A e) he
+instance power_set.lattice : lattice (set α) subset (power_set A) := lattice.mk
 
-theorem union.is_sup (A B C : set α) : subset A C → subset B C → subset (union A B) C := by
-unfold union subset set_of mem
-intro hca hcb e he
-apply Or.elim he
-case left =>
-  exact fun ha => hca e ha
-case right =>
-  exact fun hb => hcb e hb
-
--- empty set and universal set
-theorem empty.is_bot (A : set α) : subset empty A := by
-unfold subset mem empty
-intro a h
-rw [Bool.false_eq_true] at h
-exact False.elim h
-
-theorem empty.bot_unique (A : set α) : subset A empty → A = empty := by
-intro h
-apply setext
-intro a
-apply Iff.intro
-case h.mp =>
-  exact fun ha => h a ha
-case h.mpr =>
-  unfold empty mem
-  rw [Bool.false_eq_true]
-  exact fun f => False.elim f
-
-theorem empty.union_with (A : set α) : union A empty = A := by
-apply setext
-intro a
-apply Iff.intro
-case h.mp =>
-  intro h
-  exact Or.elim h (fun ha => ha) (empty.is_bot A a)
-case h.mpr =>
-  intro h
-  exact union.left_subset A empty a h
-
-theorem empty.inter_with (A : set α) : inter A empty = emty := by
-apply setext
-intro a
-apply Iff.intro
-case h.mp => sorry
-
-
-
-theorem univ.is_top (A : set α) : subset A univ := by
-unfold subset mem univ
-intro a h
-exact rfl
-
-theorem univ.top_unique (A : set α) : subset univ A → A = univ := by
-intro h
-apply setext
-intro a
-apply Iff.intro
-case h.mp =>
-  unfold univ
-  exact fun a => rfl
-case h.mpr =>
-  exact fun ha => h a ha
+instance power_set.bounded_lattice : bounded_lattice (set α) subset (power_set A) := bounded_lattice.mk

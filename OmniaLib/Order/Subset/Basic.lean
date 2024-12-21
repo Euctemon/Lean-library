@@ -2,7 +2,7 @@ import OmniaLib.Set.Defs
 import OmniaLib.Order.Relation.Defs
 
 /-
-Subset relation induced a partial order on any set of sets 𝔸. The set 𝔸 might not have a bottom element,
+Subset relation induces a partial order on any set of sets 𝔸. The set 𝔸 might not have a bottom element,
 top element, infima or suprema. If we suppose that 𝔸 is the power set of some set A, then we can prove
 that subset relation together with intersection and union induces a lattice structure on 𝔸.
 -/

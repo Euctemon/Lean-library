@@ -8,7 +8,7 @@ def set_of (p : α → Prop) : set α := p
 def mem (a : α) (s : set α) : Prop := s a
 infix:75 " ∈ " => mem
 
--- theorem about set extensionality
+-- fundamental theorem about set extensionality
 theorem setext {A B : set α} (h : ∀ (x : α), x ∈ A ↔ x ∈ B) : A = B := by
 apply funext
 intro x
